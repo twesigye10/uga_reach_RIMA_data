@@ -81,7 +81,7 @@ refugee_access_to_credit <- df_data_e %>%
 host_access_to_credit <- df_data_e %>%
   left_join(df_data_b, by = "uhhidfs") %>% 
   filter(!is.na(e3a),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & a4 == 1), )%>%
+                      & a4 == 1))%>%
   group_by(a2, e3a) %>% 
   summarise(
     hosts_able_to_access_credit = n(),
@@ -111,10 +111,25 @@ host_access_to_credit <- df_data_e %>%
 
 
 
+# Completed education (per HH member)
+
+refugee_highest_educ_level <- df_data_b %>% 
+  filter(!is.na(b6), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement"))%>% 
+  group_by(a5b, b6) %>% 
+  summarise(
+    hh_member_education_level = n(),
+    percentage_distribution = (hh_member_education/nrow(.))*100) %>% 
+  arrange(desc(hh_member_education))
 
 
-
-
+host_highest_educ_level <- df_data_b %>%
+  filter(!is.na(b6),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & a4 == 1))%>%
+  group_by(a2, b6) %>% 
+  summarise(
+    hh_member_education_level = n(),
+    percentage_distribution = (hh_member_education_level/nrow(.))*100) %>% 
+  arrange(desc(hh_member_education_level))
 
 
 
