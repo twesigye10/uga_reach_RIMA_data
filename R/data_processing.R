@@ -89,6 +89,26 @@ host_access_to_credit <- df_data_e %>%
   arrange(desc(hosts_able_to_access_credit))
 
 
+# Credit amount accessed in the past 12 months
+
+refugee_access_to_credit <- df_data_e %>%
+  left_join(df_data_b, by = "uhhidfs") %>% 
+  filter((e3b > 50), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")) %>% 
+  group_by(a5b) %>% 
+  summarise(
+    average_credit_refugees_accessed = mean(e3b, na.rm = TRUE)) %>% 
+  arrange(desc(average_credit_refugees_accessed))
+
+
+host_access_to_credit <- df_data_e %>% 
+  left_join(df_data_b, by = "uhhidfs") %>% 
+  filter((e3b > 50), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & a4 == 1))%>% 
+  group_by(a2) %>% 
+  summarise(
+    average_credit_host_accessed = mean(e3b, na.rm = TRUE)) %>% 
+  arrange(desc(average_credit_host_accessed))
+
 
 
 
