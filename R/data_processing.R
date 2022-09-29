@@ -41,7 +41,8 @@ df_data_w <- readRDS("R/anon_module_w.rdata")
 
 # Economic activity (per HH member)
 refugee_summary_num_econ_activity_per_hh <- df_data_b %>%
-  filter(!is.na(b12), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement"))%>% 
+  filter(!is.na(b12), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                       & hh_type == 1))%>% 
   group_by(a5b, b12) %>% 
   summarise(
     hhs_doing_econ_activity = n(),
@@ -51,7 +52,7 @@ refugee_summary_num_econ_activity_per_hh <- df_data_b %>%
 
 host_summary_num_econ_activity_per_hh <- df_data_b %>%
   filter(!is.na(b12),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & a4 == 1))%>% 
+                      & hh_type == 0))%>% 
   group_by(a2, b12) %>% 
   summarise(
     hhs_doing_econ_activity = n(),
@@ -70,7 +71,8 @@ host_summary_num_econ_activity_per_hh <- df_data_b %>%
 
 refugee_access_to_credit <- df_data_e %>%
   left_join(df_data_b, by = "uhhidfs") %>% 
-  filter(!is.na(e3a), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")) %>% 
+  filter(!is.na(e3a), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                       & hh_type == 1)) %>% 
   group_by(a5b, e3a) %>% 
   summarise(
     refugees_able_to_access_credit = n(),
@@ -81,7 +83,7 @@ refugee_access_to_credit <- df_data_e %>%
 host_access_to_credit <- df_data_e %>%
   left_join(df_data_b, by = "uhhidfs") %>% 
   filter(!is.na(e3a),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & a4 == 1))%>%
+                      & hh_type == 1))%>%
   group_by(a2, e3a) %>% 
   summarise(
     hosts_able_to_access_credit = n(),
@@ -93,38 +95,40 @@ host_access_to_credit <- df_data_e %>%
 
 refugee_access_to_credit <- df_data_e %>%
   left_join(df_data_b, by = "uhhidfs") %>% 
-  filter((e3b > 50), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")) %>% 
+  filter((e3b > 50), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                      & hh_type == 1)) %>% 
   group_by(a5b) %>% 
   summarise(
-    average_credit_refugees_accessed = mean(e3b, na.rm = TRUE)) %>% 
-  arrange(desc(average_credit_refugees_accessed))
+    average_amount_of_credit_refugees_accessed = mean(e3b, na.rm = TRUE)) %>% 
+  arrange(desc(average_amount_of_credit_refugees_accessed))
 
 
 host_access_to_credit <- df_data_e %>% 
   left_join(df_data_b, by = "uhhidfs") %>% 
   filter((e3b > 50), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & a4 == 1))%>% 
+                      & hh_type == 0))%>% 
   group_by(a2) %>% 
   summarise(
-    average_credit_host_accessed = mean(e3b, na.rm = TRUE)) %>% 
-  arrange(desc(average_credit_host_accessed))
+    average_amount_of_credit_host_accessed = mean(e3b, na.rm = TRUE)) %>% 
+  arrange(desc(average_amount_of_credit_host_accessed))
 
 
 
 # Completed education (per HH member)
 
 refugee_highest_educ_level <- df_data_b %>% 
-  filter(!is.na(b6), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement"))%>% 
+  filter(!is.na(b6), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                      & hh_type == 1))%>% 
   group_by(a5b, b6) %>% 
   summarise(
     hh_member_education_level = n(),
-    percentage_distribution = (hh_member_education/nrow(.))*100) %>% 
-  arrange(desc(hh_member_education))
+    percentage_distribution = (hh_member_education_level/nrow(.))*100) %>% 
+  arrange(desc(hh_member_education_level))
 
 
 host_highest_educ_level <- df_data_b %>%
   filter(!is.na(b6),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & a4 == 1))%>%
+                      & hh_type == 0))%>%
   group_by(a2, b6) %>% 
   summarise(
     hh_member_education_level = n(),
