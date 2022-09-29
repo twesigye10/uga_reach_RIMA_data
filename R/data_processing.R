@@ -1,0 +1,61 @@
+
+# load library
+library(tidyverse)
+
+df_data_x <- readRDS("R/anon_module_x.rdata")
+
+df_data_a <- readRDS("R/anon_module_a.rdata")
+
+df_data_b <- readRDS("R/anon_module_b.rdata")
+
+df_data_c <- readRDS("R/anon_module_c.rdata")
+
+df_data_d <- readRDS("R/anon_module_d.rdata")
+
+df_data_e <- readRDS("R/anon_module_e.rdata")
+
+df_data_f <- readRDS("R/anon_module_f.rdata")
+
+df_data_g1 <- readRDS("R/anon_module_g1.rdata")
+
+df_data_g2 <- readRDS("R/anon_module_g2.rdata")
+
+df_data_hi <- readRDS("R/anon_module_h1.rdata")
+
+df_data_h2 <- readRDS("R/anon_module_h2.rdata")
+
+df_data_h3 <- readRDS("R/anon_module_h3.rdata")
+
+df_data_i <- readRDS("R/anon_module_i.rdata")
+
+df_data_j <-  readRDS("R/anon_module_j.rdata")
+
+df_data_k <- readRDS("R/anon_module_k.rdata")
+
+df_data_l <-  readRDS("R/anon_module_l.rdata")
+
+df_data_s <- readRDS("R/anon_module_s.rdata")
+
+df_data_w <- readRDS("R/anon_module_w.rdata")
+
+
+# Economic activity (per HH member)
+refugee_summary_num_econ_activity_per_hh <- df_data_b %>%
+  filter(!is.na(b12), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement"))%>% 
+  group_by(a5b, b12) %>% 
+  summarise(
+    hhs_doing_econ_activity = n(),
+    percentage_distribution = (hhs_doing_econ_activity/nrow(.))*100) %>% 
+  arrange(desc(hhs_doing_econ_activity))
+
+
+host_summary_num_econ_activity_per_hh <- df_data_b %>%
+  filter(!is.na(b12),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & a4 == 1))%>% 
+  group_by(a2, b12) %>% 
+  summarise(
+    hhs_doing_econ_activity = n(),
+    percentage_distribution = (hhs_doing_econ_activity/nrow(.))*100) %>% 
+  arrange(desc(hhs_doing_econ_activity))
+
+
