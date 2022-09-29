@@ -93,7 +93,7 @@ host_access_to_credit <- df_data_e %>%
 
 # Credit amount accessed in the past 12 months
 
-refugee_access_to_credit <- df_data_e %>%
+refugee_credit_amount_accessed <- df_data_e %>%
   left_join(df_data_b, by = "uhhidfs") %>% 
   filter((e3b > 50), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
                       & hh_type == 1)) %>% 
@@ -103,7 +103,7 @@ refugee_access_to_credit <- df_data_e %>%
   arrange(desc(average_amount_of_credit_refugees_accessed))
 
 
-host_access_to_credit <- df_data_e %>% 
+host_credit_amount_accessed <- df_data_e %>% 
   left_join(df_data_b, by = "uhhidfs") %>% 
   filter((e3b > 50), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
                       & hh_type == 0))%>% 
@@ -123,7 +123,7 @@ refugee_highest_educ_level <- df_data_b %>%
   summarise(
     hh_member_education_level = n(),
     percentage_distribution = (hh_member_education_level/nrow(.))*100) %>% 
-  arrange(desc(hh_member_education_level))
+  arrange(b6)
 
 
 host_highest_educ_level <- df_data_b %>%
@@ -133,7 +133,30 @@ host_highest_educ_level <- df_data_b %>%
   summarise(
     hh_member_education_level = n(),
     percentage_distribution = (hh_member_education_level/nrow(.))*100) %>% 
-  arrange(desc(hh_member_education_level))
+  arrange(b6)
+
+# hoh educ completed
+
+refugee_hoh_educ_level_completed <- df_data_b %>% 
+  filter(!is.na(b6), b2 == 1, (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                & hh_type == 1))%>% 
+  group_by(a5b, b6, b2) %>% 
+  summarise(
+    hoh_education_level = n(),
+    percentage_distribution = (hoh_education_level/nrow(.))*100) %>% 
+  arrange(b6)
+
+
+host_hoh_educ_level_completed <- df_data_b %>% 
+  filter(!is.na(b6), b2 == 1, (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                               & hh_type == 0))%>% 
+  group_by(a2, b6, b2) %>% 
+  summarise(
+    hoh_education_level = n(),
+    percentage_distribution = (hoh_education_level/nrow(.))*100) %>% 
+  arrange(b6)
+
+
 
 
 
