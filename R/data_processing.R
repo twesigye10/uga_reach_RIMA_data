@@ -59,3 +59,43 @@ host_summary_num_econ_activity_per_hh <- df_data_b %>%
   arrange(desc(hhs_doing_econ_activity))
 
 
+
+# HH incomes
+#refugee_summary_hh_income <- df_data_hi %>% 
+# left_join(df_data_b, by = "uhhidfs" ) %>% 
+#mutate()
+
+
+# Access to credit
+
+refugee_access_to_credit <- df_data_e %>%
+  left_join(df_data_b, by = "uhhidfs") %>% 
+  filter(!is.na(e3a), a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")) %>% 
+  group_by(a5b, e3a) %>% 
+  summarise(
+    refugees_able_to_access_credit = n(),
+    percentage_distribution = (refugees_able_to_access_credit/nrow(.))*100) %>% 
+  arrange(desc(refugees_able_to_access_credit))
+
+
+host_access_to_credit <- df_data_e %>%
+  left_join(df_data_b, by = "uhhidfs") %>% 
+  filter(!is.na(e3a),(a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & a4 == 1), )%>%
+  group_by(a2, e3a) %>% 
+  summarise(
+    hosts_able_to_access_credit = n(),
+    percentage_distribution = (hosts_able_to_access_credit/nrow(.))*100) %>% 
+  arrange(desc(hosts_able_to_access_credit))
+
+
+
+
+
+
+
+
+
+
+
+
