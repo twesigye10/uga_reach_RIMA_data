@@ -219,9 +219,28 @@ host_arable_land_size <- df_data_c %>%
 
 
 
+# Livestock owned
+# remove outliers
+
+refugee_livestock_owned <- df_data_f %>% 
+  filter((!is.na(f29_3) & f29_3 != 999 & f29_3 !=80000 & f29_3 != 0), (!is.na(f29_2)),
+         (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                      & hh_type == 1))%>% 
+  group_by(a5b, f29_2) %>% 
+  summarise(
+    number_livestock_owned = n() %>% 
+    round(0)) %>% 
+    arrange(desc(a5b))
 
 
-
+host_livestock_owned <- df_data_f %>% 
+  filter((!is.na(f29_3) & f29_3 != 999 & f29_3 !=80000 & f29_3 != 0), (!is.na(f29_2)), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                                        & hh_type == 0))%>%  
+  group_by(a2, f29_2) %>% 
+  summarise(
+    number_livestock_owned = n() %>% 
+      round(0)) %>% 
+  arrange(desc(a2))
 
 
 
