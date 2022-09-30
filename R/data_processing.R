@@ -192,6 +192,29 @@ host_distance_to_health_facility <- df_data_d %>%
   arrange(desc(distance_to_health_facility))
 
 
+# Arable land size (acres)
+# remove outliers
+
+refugee_arable_land_size <- df_data_c %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(c7), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+                      & hh_type == 1))%>% 
+  group_by(a5b) %>% 
+  summarise(
+    arable_land_size = mean(c7, na.rm = TRUE) %>% 
+      round(1)) %>% 
+  arrange(desc(arable_land_size))
+
+
+host_arable_land_size <- df_data_c %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(c7), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & hh_type == 0))%>% 
+  group_by(a2) %>% 
+  summarise(
+    arable_land_size = mean(c7, na.rm = TRUE) %>% 
+      round(1)) %>% 
+  arrange(desc(arable_land_size))
 
 
 
