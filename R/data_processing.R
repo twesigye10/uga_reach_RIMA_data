@@ -42,13 +42,13 @@ df_data_w <- readRDS("inputs/anon_module_w.rdata")
 
 # Economic activity (per HH member)
 refugee_summary_num_econ_activity_per_hh <- df_data_b %>%
-  filter(!is.na(b12), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                       & hh_type == 1))%>% 
+  filter(!is.na(b12), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                  "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b, b12) %>% 
   summarise(
     hhs_doing_econ_activity = n(),
-    percentage_distribution = (hhs_doing_econ_activity/nrow(.))*100) %>% 
-  arrange(desc(hhs_doing_econ_activity))
+    percentage_distribution = (hhs_doing_econ_activity/nrow(.))*100) %>%
+     arrange(desc(hhs_doing_econ_activity))
 
 
 host_summary_num_econ_activity_per_hh <- df_data_b %>%
@@ -72,8 +72,8 @@ host_summary_num_econ_activity_per_hh <- df_data_b %>%
 
 refugee_access_to_credit <- df_data_e %>%
   left_join(df_data_a, by = "uhhidfs") %>% 
-  filter(!is.na(e3a), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                       & hh_type == 1)) %>% 
+  filter(!is.na(e3a), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                  "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1)) %>% 
   group_by(a5b, e3a) %>% 
   summarise(
     refugees_able_to_access_credit = n(),
@@ -96,8 +96,8 @@ host_access_to_credit <- df_data_e %>%
 
 refugee_credit_amount_accessed <- df_data_e %>%
   left_join(df_data_a, by = "uhhidfs") %>% 
-  filter((e3b > 50), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                      & hh_type == 1)) %>% 
+  filter((e3b > 50), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1)) %>% 
   group_by(a5b) %>% 
   summarise(
     average_amount_of_credit_refugees_accessed = mean(e3b, na.rm = TRUE)) %>% 
@@ -114,12 +114,11 @@ host_credit_amount_accessed <- df_data_e %>%
   arrange(desc(average_amount_of_credit_host_accessed))
 
 
-
 # Completed education (per HH member)
 
 refugee_highest_educ_level <- df_data_b %>% 
-  filter(!is.na(b6), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                      & hh_type == 1))%>% 
+  filter(!is.na(b6), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b, b6) %>% 
   summarise(
     hh_member_education_level = n(),
@@ -140,8 +139,8 @@ host_highest_educ_level <- df_data_b %>%
 # hoh educ completed
 
 refugee_hoh_educ_level_completed <- df_data_b %>% 
-  filter(!is.na(b6), b2 == 1, (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                & hh_type == 1))%>% 
+  filter(!is.na(b6), b2 == 1, (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                          "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b, b6, b2) %>% 
   summarise(
     hoh_education_level = n(),
@@ -164,7 +163,7 @@ host_hoh_educ_level_completed <- df_data_b %>%
 
 #refugee_trainings_received <- df_data_hi %>%
   #left_join(df_data_a, by = "uhhidfs") %>% 
- # filter(!is.na(h2_1), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
+ # filter(!is.na(h2_1), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement")
                         #& hh_type == 1))
 
 # Distance in km to public/private health facility
@@ -172,8 +171,8 @@ host_hoh_educ_level_completed <- df_data_b %>%
 
 refugee_distance_to_health_facility <- df_data_d %>% 
   left_join(df_data_a, by = "uhhidfs") %>% 
-  filter(d1_3 != 999, (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                      & hh_type == 1))%>% 
+  filter(d1_3 != 999, (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                  "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b) %>% 
   summarise(
     distance_to_health_facility = mean(d1_3, na.rm = TRUE) %>% 
@@ -197,8 +196,8 @@ host_distance_to_health_facility <- df_data_d %>%
 
 refugee_arable_land_size <- df_data_c %>% 
   left_join(df_data_a, by = "uhhidfs") %>% 
-  filter(!is.na(c7), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                      & hh_type == 1))%>% 
+  filter(!is.na(c7), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b) %>% 
   summarise(
     arable_land_size = mean(c7, na.rm = TRUE) %>% 
@@ -217,37 +216,105 @@ host_arable_land_size <- df_data_c %>%
   arrange(desc(arable_land_size))
 
 
-
-
 # Livestock owned
 # remove outliers
 
 refugee_livestock_owned <- df_data_f %>% 
   filter((!is.na(f29_3) & f29_3 != 999 & f29_3 !=80000 & f29_3 != 0), (!is.na(f29_2)),
-         (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", "Rhinocamp_settlement")
-                      & hh_type == 1))%>% 
+         (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                     "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
   group_by(a5b, f29_2) %>% 
   summarise(
-    number_livestock_owned = n() %>% 
-    round(0)) %>% 
+    number_livestock_owned = n(),
+      percentage_distribution = (number_livestock_owned/nrow(.))*100) %>% 
     arrange(desc(a5b))
 
 
 host_livestock_owned <- df_data_f %>% 
-  filter((!is.na(f29_3) & f29_3 != 999 & f29_3 !=80000 & f29_3 != 0), (!is.na(f29_2)), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+  filter((!is.na(f29_3) & f29_3 != 999 & f29_3 != 0), (!is.na(f29_2)), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
                                         & hh_type == 0))%>%  
   group_by(a2, f29_2) %>% 
   summarise(
-    number_livestock_owned = n() %>% 
-      round(0)) %>% 
+    number_livestock_owned = n(), 
+      percentage_distribution = (number_livestock_owned/nrow(.))*100) %>% 
   arrange(desc(a2))
 
 
+# Primary source of drinking water
+refugee_primary_drinking_water_source <- df_data_d %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(d3), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
+  group_by(a5b, d3) %>% 
+  summarise(
+    primary_drinking_water_source = n(), 
+    percentage_distribution = (primary_drinking_water_source/nrow(.))*100) %>% 
+    arrange(desc(d3))
 
 
+host_primary_drinking_water_source <- df_data_d %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(d3), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & hh_type == 0))%>% 
+  group_by(a2, d3) %>% 
+  summarise(
+    primary_drinking_water_source = n(),
+    percentage_distribution = (primary_drinking_water_source/nrow(.))*100) %>% 
+  arrange(desc(d3))
 
 
+# Time taken to primary source of water
+# remove outliers
+refugee_time_taken_to_water_source <- df_data_d %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(d5), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
+  group_by(a5b) %>% 
+  summarise(
+  minutes_taken_to_water_source = (mean(d5, na.rm = TRUE)/2) %>% 
+      round(1)) %>% 
+  arrange(desc(minutes_taken_to_water_source))
 
+
+host_time_taken_to_water_source <- df_data_d %>% 
+  left_join(df_data_a, by = "uhhidfs") %>% 
+  filter(!is.na(d5), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                      & hh_type == 0))%>% 
+  group_by(a2) %>% 
+  summarise(
+    minutes_taken_to_water_source = (mean(d5, na.rm = TRUE)/2) %>% 
+      round(1)) %>% 
+  arrange(desc(minutes_taken_to_water_source))
+ 
+
+# Ownership of agricultural assets
+# remove outliers
+
+ refugee_own_agric_assets <- df_data_c %>% 
+   left_join(df_data_a, by = "uhhidfs") %>% 
+   rowwise() %>% 
+    mutate(total_assets = sum(across(c5_1:c5_16), na.rm = TRUE)) %>% 
+  filter(!is.na(total_assets), (a5b %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
+   group_by(a5b) %>% 
+   summarise(
+     average_agric_assets_per_hh = (mean(total_assets, na.rm = TRUE)) %>% 
+       round(0)) %>% 
+   arrange(desc(average_agric_assets_per_hh))
+ 
+
+ host_own_agric_assets <- df_data_c %>% 
+   left_join(df_data_a, by = "uhhidfs") %>% 
+   rowwise() %>% 
+   mutate(total_assets = sum(across(c5_1:c5_16), na.rm = TRUE)) %>% 
+   filter(!is.na(total_assets), (a2 %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
+                                 & hh_type == 0))%>% 
+   group_by(a2) %>% 
+   summarise(
+     average_agric_assets_per_hh = (mean(total_assets, na.rm = TRUE)) %>% 
+       round(0)) %>% 
+   arrange(desc(average_agric_assets_per_hh)) 
+ 
 
 
 
