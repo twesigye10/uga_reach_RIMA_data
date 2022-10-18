@@ -1,0 +1,81 @@
+---
+title: '"RIMA_2019_Analysis'
+author: "Mathias"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+
+# read packages
+library(tidyverse)
+library(lubridate)
+
+# load data
+
+df_data_x <- read_csv(file = "anon_module_x.rdata.csv")
+
+df_data_a <- read_csv(file = "anon_module_a.rdata.csv")
+
+df_data_b <- read_csv(file = "anon_module_b.rdata.csv")
+
+df_data_c <- read_csv(file = "anon_module_c.rdata.csv")
+
+df_data_d <- read_csv(file = "anon_module_d.rdata.csv")
+
+df_data_e <- read_csv(file = "anon_module_e.rdata.csv")
+
+df_data_f <- read_csv(file = "anon_module_f.rdata.csv")
+
+df_data_g1 <- read_csv(file = "anon_module_g1.rdata.csv")
+
+df_data_g2 <- read_csv(file = "anon_module_g2.rdata.csv")
+
+df_data_hi <- read_csv(file = "anon_module_hi.rdata.csv")
+
+df_data_h2 <- read_csv(file = "anon_module_h2.rdata.csv")
+
+df_data_h3 <- read_csv(file = "anon_module_h3.rdata.csv")
+
+df_data_i <- read_csv(file = "anon_module_i.rdata.csv")
+
+df_data_j <- read_csv(file = "anon_module_j.rdata.csv")
+
+df_data_k <- read_csv(file = "anon_module_k.rdata.csv")
+
+df_data_l <- read_csv(file = "anon_module_l.rdata.csv")
+
+df_data_s <- read_csv(file = "anon_module_s.rdata.csv")
+
+df_data_w <- read_csv(file = "anon_module_w.rdata.csv")
+
+```
+
+## Analysis summarry
+
+
+
+```{r}
+### Economic activity (per HH)
+
+refugee_econ_activity_per_hh_member <- df_data_b %>%
+  group_by(uhhidfs) %>% 
+  rename(economic_activity = "b12") %>% 
+  mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
+                                     TRUE ~ a5b)) %>%
+  ungroup() %>% 
+  filter(is.na(economic_activity), (settlement_name %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
+                                  "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
+  group_by(settlement_name) %>% 
+  summarise(
+    Number_hh_having_econ_activity = n())%>%
+     arrange(settlement_name)
+
+```
+
