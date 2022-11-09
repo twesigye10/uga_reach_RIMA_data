@@ -3,6 +3,8 @@
 .RData
 .Ruserdata
 *.html
+*.csv
+*.xlsx
 inputs/*
 outputs/*
 support_files/*
