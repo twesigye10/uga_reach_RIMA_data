@@ -1,47 +1,66 @@
-# Summary statistics 2019
+---
+title: '"RIMA_2019_Analysis'
+author: "Mathias"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
 
-# load library
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+
+# read packages
 library(tidyverse)
+library(lubridate)
 
-df_data_x <- readRDS("inputs/anon_module_x.rdata")
+# load data
 
-df_data_a <- readRDS("inputs/anon_module_a.rdata")
+df_data_x <- read_csv(file = "anon_module_x.rdata.csv")
 
-df_data_b <- readRDS("inputs/anon_module_b.rdata")
+df_data_a <- read_csv(file = "anon_module_a.rdata.csv")
 
-df_data_c <- readRDS("inputs/anon_module_c.rdata")
+df_data_b <- read_csv(file = "anon_module_b.rdata.csv")
 
-df_data_d <- readRDS("inputs/anon_module_d.rdata")
+df_data_c <- read_csv(file = "anon_module_c.rdata.csv")
 
-df_data_e <- readRDS("inputs/anon_module_e.rdata")
+df_data_d <- read_csv(file = "anon_module_d.rdata.csv")
 
-df_data_f <- readRDS("inputs/anon_module_f.rdata")
+df_data_e <- read_csv(file = "anon_module_e.rdata.csv")
 
-df_data_g1 <- readRDS("inputs/anon_module_g1.rdata")
+df_data_f <- read_csv(file = "anon_module_f.rdata.csv")
 
-df_data_g2 <- readRDS("inputs/anon_module_g2.rdata")
+df_data_g1 <- read_csv(file = "anon_module_g1.rdata.csv")
 
-df_data_hi <- readRDS("inputs/anon_module_h1.rdata")
+df_data_g2 <- read_csv(file = "anon_module_g2.rdata.csv")
 
-df_data_h2 <- readRDS("inputs/anon_module_h2.rdata")
+df_data_hi <- read_csv(file = "anon_module_hi.rdata.csv")
 
-df_data_h3 <- readRDS("inputs/anon_module_h3.rdata")
+df_data_h2 <- read_csv(file = "anon_module_h2.rdata.csv")
 
-df_data_i <- readRDS("inputs/anon_module_i.rdata")
+df_data_h3 <- read_csv(file = "anon_module_h3.rdata.csv")
 
-df_data_j <-  readRDS("inputs/anon_module_j.rdata")
+df_data_i <- read_csv(file = "anon_module_i.rdata.csv")
 
-df_data_k <- readRDS("inputs/anon_module_k.rdata")
+df_data_j <- read_csv(file = "anon_module_j.rdata.csv")
 
-df_data_l <-  readRDS("inputs/anon_module_l.rdata")
+df_data_k <- read_csv(file = "anon_module_k.rdata.csv")
 
-df_data_s <- readRDS("inputs/anon_module_s.rdata")
+df_data_l <- read_csv(file = "anon_module_l.rdata.csv")
 
-df_data_w <- readRDS("inputs/anon_module_w.rdata")
+df_data_s <- read_csv(file = "anon_module_s.rdata.csv")
 
+df_data_w <- read_csv(file = "anon_module_w.rdata.csv")
 
-# Economic activity (per HH)
+```
 
+## Analysis summarry
+
+### Economic activity (per HH)
+```{r, echo = FALSE}
 refugee_econ_activity_per_hh_member <- df_data_b %>%
   group_by(uhhidfs) %>% 
   rename(economic_activity = "b12") %>% 
@@ -68,15 +87,13 @@ host_summary_num_econ_activity_per_hh_member <- df_data_b %>%
     Number_hh_having_econ_activity = n())%>%
   arrange(district_name)
 
+```
 
-# HH incomes
+###HH incomes
 # pending
- 
-   
 
- 
-
-# HH access to credit by 
+### HH access to credit
+```{r, echo = FALSE}
 
 refugee_access_to_credit <- df_data_e %>%
     left_join(df_data_a, by = "uhhidfs") %>% 
@@ -104,8 +121,11 @@ host_access_to_credit <- df_data_e %>%
     percentage_distribution = (hh_able_to_access_credit/nrow(.))*100) %>% 
   arrange(desc(hh_able_to_access_credit))
 
+```
 
-# Number hh accessed credit in the past 12 months
+
+### Number hh accessed credit in the past 12 months
+```{r, echo = FALSE}
 
 refugee_accessed_credit <- df_data_e %>%
   left_join(df_data_a, by = "uhhidfs") %>%
@@ -133,38 +153,12 @@ host_accessed_credit <- df_data_e %>%
     percentage_distribution = (number_accessed_credit/nrow(.))*100) %>% 
 arrange(desc(number_accessed_credit))
 
+```
 
+### Hoh educ completed
+```{r, echo = FALSE}
 
-# Completed education (per HH member)
-
-refugee_highest_educ_level <- df_data_b %>% 
-  rename(education_level = "b6") %>% 
-   mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
-                                     TRUE ~ a5b)) %>%
-  filter(!is.na(education_level), (settlement_name %in% c("Bidibidi_settlement", "Nakivale_settlement", "Palabeck_settlement", 
-                                 "Omugo_Rhino_ext_settlement", "Rhinocamp_settlement") & hh_type == 1))%>% 
-  group_by(settlement_name, education_level) %>% 
-  summarise(
-    number_completed_level = n(),
-    percentage_distribution = (number_completed_level/nrow(.))*100) %>% 
-  arrange(education_level)
-
-
-host_highest_educ_level <- df_data_b %>%
-  rename(district_name = "a2",
-         education_level = "b6") %>%
-  filter(!is.na(education_level),(district_name %in% c("Yumbe", "Isingiro", "Lamwo", "Arua")
-                      & hh_type == 0))%>%
-  group_by(district_name, education_level) %>% 
-  summarise(
-    number_completed_level = n(),
-    percentage_distribution = (number_completed_level/nrow(.))*100) %>% 
-  arrange(education_level)
-
-
-# Hoh educ completed
-
-refugee_hoh_educ_level_completed <- df_data_b %>% 
+ refugee_hoh_educ_level_completed <- df_data_b %>% 
   rename(education_level = "b6",
          relation_to_hoh = "b2") %>% 
   mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -190,10 +184,12 @@ host_hoh_educ_level_completed <- df_data_b %>%
     percentage_distribution = (number_completed_level/nrow(.))*100) %>% 
   arrange(education_level)
 
+```
 
-# Training received by type
+### Training received by type
+```{r, echo = FALSE}
 
-summary_hh_training <- df_data_hi %>% 
+ summary_hh_training <- df_data_hi %>% 
   left_join(df_data_b, by = "uhhidfs" ) %>% 
   distinct(uhhidfs, .keep_all = TRUE) %>% 
   rename(district_name = "a2")%>%
@@ -223,6 +219,7 @@ summary_hh_training <- df_data_hi %>%
                                   pest_disease_cntrol_1 == 10 | business_skills_1 == 10 | agri_value_addition_1 == 10 | livestock_manage_1 == 10 | animal_health_1 ==10, 1, NA),
          settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
                                      TRUE ~ a5b))
+
 
 
 refugee_training_none <- summary_hh_training %>% 
@@ -423,10 +420,12 @@ host_training_in_animal_health <- summary_hh_training %>%
   arrange(desc(number_hh_received_training))
 
 
+```
 
-# Distance in km to public/private health facility
-# Removed outliers
-refugee_distance_to_health_facility <- df_data_d %>% 
+## Distance in km to public/private health facility
+```{r, echo = FALSE}
+
+ refugee_distance_to_health_facility <- df_data_d %>% 
   left_join(df_data_a, by = "uhhidfs") %>% 
   mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
                                      TRUE ~ a5b),
@@ -454,9 +453,10 @@ host_distance_to_health_facility <- df_data_d %>%
       round(1)) %>% 
   arrange(desc(distance_to_health_facility))
 
+```
 
-# Arable land size (acres)
-# removed outliers (5%)
+###  Arable land size (acres)
+```{r, echo = FALSE}
 
 refugee_arable_land_size <- df_data_c %>% 
   left_join(df_data_a, by = "uhhidfs") %>% 
@@ -486,9 +486,11 @@ host_arable_land_size <- df_data_c %>%
     arable_land_size_acreage = mean(c7, na.rm = TRUE) %>% 
       round(1)) %>% 
   arrange(desc(arable_land_size_acreage))
+```
 
+###  Livestock owned
+```{r, echo = FALSE}
 
-# Livestock owned
 refugee_livestock_owned <- df_data_f %>% 
   group_by(uhhidfs) %>% 
  mutate(settlement_name = case_when(a5b %in% c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -521,8 +523,11 @@ host_livestock_owned <- df_data_f %>%
       round(0)) %>% 
     arrange(district_name)
 
+```
 
-  # Primary source of drinking water
+###  Primary source of drinking water
+```{r, echo = FALSE}
+
 refugee_primary_drinking_water_source <- df_data_d %>% 
   left_join(df_data_a, by = "uhhidfs") %>% 
   mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -549,8 +554,11 @@ host_primary_drinking_water_source <- df_data_d %>%
     percentage_distribution = (number_using_water_source/nrow(.))*100) %>% 
   arrange(desc(district_name))
 
+```
 
-# Time taken to primary source of water
+###  Time taken to primary source of water
+```{r, echo = FALSE}
+
 refugee_time_taken_to_water_source <- df_data_d %>% 
   left_join(df_data_a, by = "uhhidfs") %>%   
   mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -575,9 +583,12 @@ host_time_taken_to_water_source <- df_data_d %>%
     minutes_taken_to_water_source = (mean(d5, na.rm = TRUE)/2) %>% 
       round(1)) %>% 
   arrange(desc(minutes_taken_to_water_source))
- 
 
-# Ownership of agricultural assets
+```
+
+###  Ownership of agricultural assets
+```{r, echo = FALSE}
+
  refugee_agric_assets_owned <- df_data_c %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    rowwise() %>% 
@@ -608,9 +619,12 @@ host_time_taken_to_water_source <- df_data_d %>%
       round(0)) %>% 
    arrange(desc(average_agric_assets_per_hh)) 
 
-  
-# Cell phone ownership (per HH member)
-  refugee_phone_ownership_per_hh_member <- df_data_c %>% 
+```
+
+###  Cell phone ownership 
+```{r, echo = FALSE}
+
+   refugee_phone_ownership_per_hh_member <- df_data_c %>% 
    left_join(df_data_b, by = "uhhidfs") %>% 
    mutate(new_value = ifelse(duplicated(uhhidfs), NA, c6_1),
           settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -637,10 +651,12 @@ host_time_taken_to_water_source <- df_data_d %>%
       average_phones_per_hh   =  mean(new_value),
       percentage_distribution = (Total_phones/nrow(.))*100)%>% 
     arrange(desc(average_phones_per_hh)) 
-     
- 
-  # Other NFI ownership aggregates
- # Failed to apply quantile to filter outliers
+
+```
+
+### Other NFI ownership aggregates 
+```{r, echo = FALSE}
+
  refugee_non_agric_assets_owned <- df_data_c %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    rowwise() %>% 
@@ -658,7 +674,6 @@ host_time_taken_to_water_source <- df_data_d %>%
    arrange(desc(average_non_agric_assets_per_hh))
 
 
-   
  host_non_agric_assets_owned <- df_data_c %>%  
    left_join(df_data_a, by = "uhhidfs") %>% 
    rename(district_name = "a2") %>% 
@@ -674,9 +689,11 @@ host_time_taken_to_water_source <- df_data_d %>%
        round(0)) %>% 
    arrange(desc(average_non_agric_assets_per_hh))
  
-   
-   
-   # Distance in km to petty trading market
+```
+
+### Distance in km to petty trading market 
+```{r, echo = FALSE}
+
  refugee_distance_to_trading_market <- df_data_d %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -704,10 +721,12 @@ host_time_taken_to_water_source <- df_data_d %>%
      distance_to_trading_market = mean(d1_7, na.rm = TRUE) %>% 
        round(1)) %>% 
    arrange(desc(distance_to_trading_market))
- 
- 
- # Level of trust with other groups
- refugee_trust_level_with_others <- df_data_s %>% 
+```
+
+### Level of trust with other groups 
+```{r, echo = FALSE}
+
+   refugee_trust_level_with_others <- df_data_s %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    rename(trust_level = s7) %>% 
    mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -732,9 +751,12 @@ host_time_taken_to_water_source <- df_data_d %>%
      number_by_level_of_trust = n(),
      percentage_distribution = (number_by_level_of_trust/nrow(.))*100) %>% 
    arrange(trust_level)
- 
- 
- # Feeling of belonging
+
+```
+
+### Feeling of belonging 
+```{r, echo = FALSE}
+
  refugee_feel_of_belonging_to_community <- df_data_s %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    rename(feel_of_belonging_level = s8) %>% 
@@ -760,12 +782,13 @@ host_time_taken_to_water_source <- df_data_d %>%
      number_by_level_of_belonging = n(),
      percentage_distribution = (number_by_level_of_belonging/nrow(.))*100) %>% 
    arrange(feel_of_belonging_level)
+
+```
+
+###  Frequency Travel to urban areas (per HH_more than once in past 12 months) 
+```{r, echo = FALSE}
  
- 
- 
- # Frequency Travel to urban areas (per HH_more than once in past 12 months)
- # indicator complicated
- refugee_freq_travel_tO_urban <- df_data_b %>% 
+  refugee_freq_travel_tO_urban <- df_data_b %>% 
    group_by(uhhidfs) %>% 
    rename(freq_travel_tO_urban = b20b) %>% 
    mutate(settlement_name = case_when(a5b %in% c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -779,15 +802,12 @@ host_time_taken_to_water_source <- df_data_d %>%
       mutate(percentage_distribution = (number_travelling_to_urban/sum(number_travelling_to_urban)*100) %>% 
    round(1)) %>% 
       arrange(freq_travel_tO_urban)
+```
+
+### Travel to country of origin (per HH)
+```{r, echo = FALSE}
  
- # Few host were interviewed for this indicator
- # None of host interviewed travel frequently
- 
- 
- # Travel to country of origin (per HH)
- # indicator complicated 
- 
- refugee_freq_travel_tO_origin_ctry <- df_data_b %>% 
+  refugee_freq_travel_tO_origin_ctry <- df_data_b %>% 
  group_by(uhhidfs) %>% 
    rename(freq_travel_tO_origin_ctry = b22c) %>% 
    mutate(settlement_name = case_when(a5b %in% c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
@@ -801,14 +821,13 @@ host_time_taken_to_water_source <- df_data_d %>%
    mutate(percentage_distribution = (number_travelling_to_origin_ctry/sum(number_travelling_to_origin_ctry)*100) %>% 
             round(1)) %>% 
    arrange(freq_travel_tO_origin_ctry)
- 
- 
- 
- # Percentage of hh with poor consumption score
- # HH got a total FCS of 21 or less i.e. 
-  # cereals/tubers * 2 + pulses * 3 + vegetables + fruits + protein *4 + dairy *4 + sugar * 0.5 + oils * 0.5 <=21
- 
- refugee_hh_with_poor_fcs <- df_data_g1 %>% 
+
+```
+
+### Percentage of hh with poor consumption score (total FCS of 21 or less)
+```{r, echo = FALSE}
+
+   refugee_hh_with_poor_fcs <- df_data_g1 %>% 
    left_join(df_data_a, by = "uhhidfs") %>% 
    rename(cereal_days = g1b_1, tuber_days = g1b_2, pulse_days = g1b_3, orange_veg_days = g1b_4, green_leafy_veg_days = g1b_5,
           other_veg_days = g1b_6, orange_fruit_days = g1b_7, other_fruit_days = g1b_8, beaf_days = g1b_9, organ_meat_days = g1b_10, 
@@ -859,11 +878,12 @@ host_time_taken_to_water_source <- df_data_d %>%
      number_hh_with_poor_fcs = n(),
      percentage_distribution = (number_hh_with_poor_fcs/nrow(.))*100) %>% 
    arrange(desc(number_hh_with_poor_fcs))
+```
+
+###  Main livelihood of household
+```{r, echo = FALSE}
  
- 
-     # Main livelihood of household
- # indicator complicated
- refugee_hh_main_livelihood <- df_data_a %>%
+   refugee_hh_main_livelihood <- df_data_a %>%
    rename(main_livelihood = "a16") %>% 
    mutate(settlement_name = case_when(a5b %in%c("Omugo_Rhino_ext_settlement") ~ "Rhinocamp_settlement",
                                       TRUE ~ a5b)) %>%
@@ -876,7 +896,6 @@ host_time_taken_to_water_source <- df_data_d %>%
    arrange(settlement_name)
  
  
- 
  host_summary_num_econ_activity_per_hh_member <- df_data_b %>%
    rename(district_name = "a2",
           economic_activity = "b12") %>% 
@@ -887,18 +906,6 @@ host_time_taken_to_water_source <- df_data_d %>%
      Number_people_by_econ_activity = n(),
      percentage_distribution = (Number_people_by_econ_activity/nrow(.))*100) %>% 
    arrange(district_name)
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
 
-
-
-
+```
 
